@@ -1,40 +1,45 @@
-import React from 'react';
-import './App.css';
-import ReactDOM from 'react-dom';
-import { reducer, initalState } from "../reducers/reducer";
+import React, { useReducer } from "react";
+import "./App.css";
 
-const App = () => {
-    const [state, dispatch] = useReducer(reducer, initialState);
+//components
+import ListForm from "./components/ListForm";
+import List from "./components/List";
 
-    const addItem = (e, item) => {
-        e.preventDefault();
-        dispatch({type: "ADD_ITEM", payload: item});
-    };
+//reducer
+import { initialState, reducer } from "./reducers/reducer";
 
-    const toggleItem = itemId => {
-        dispatch({type: "TOGGLE_ITEM", payload: itemID});
-    };
-    const clearPurchased = e => {
-        e.preventDefault();
-        dispatch({type: "CLEAR_PURCHASES"});
-    }
+function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  console.log("reducer state", state);
+
+  const addNew = todo => {
+    console.log("fire");
+    dispatch({ type: "ADD_TODO", payload: todo });
+  };
+
+  const toggle = id => {
+    console.log("toggle fire");
+    dispatch({ type: "TOGGLE_COMPLETE", payload: id });
+  };
+
+  const clear = () => {
+    dispatch({ type: "CLEAR_COMPLETED" });
+  };
+
+  const deleteTodo = id => {
+    dispatch({ type: "DELETE_TODO", payload: id });
+  };
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Todo App</h1>
+      <ListForm addTodo={addNew} />
+      <List
+        items={state.todos}
+        toggle={toggle}
+        clear={clear}
+        delete={deleteTodo}
+      />
     </div>
   );
 }
